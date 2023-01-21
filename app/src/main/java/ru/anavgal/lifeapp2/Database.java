@@ -1,23 +1,25 @@
 package ru.anavgal.lifeapp2;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Database {
-
     private Connection connection;
-    private final String host = "10.0.2.2";
     private final String database = "LifeApp2";
     private final int port = 5432;
-    private final String user = "postgres";
-    private final String pass = "KapiTal14";
-    private String url = "jdbc:postgresql://%s:%d/%s";
+   private String url = "jdbc:postgresql://%s:%d/%s";
     private boolean status;
 
-    public Database()
+
+    public Database(String host, String login, String password)
     {
-        this.url = String.format(this.url, this.host, this.port, this.database);
-        connect();
+
+        this.url = String.format(this.url, host, this.port, this.database);
+        connect(login, password);
         System.out.println("connection status:" + status);
+
         try {
             this.connection.close();
         } catch (SQLException e) {
@@ -25,7 +27,7 @@ public class Database {
         }
     }
 
-    private Connection connect()
+    private Connection connect(String login, String password)
     {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -34,7 +36,7 @@ public class Database {
                 try
                 {
                     Class.forName("org.postgresql.Driver");
-                    connection = DriverManager.getConnection(url, user, pass);
+                    connection = DriverManager.getConnection(url, login, password);
                     status = true;
                 }
                 catch (Exception e)
@@ -58,14 +60,14 @@ public class Database {
         return connection;
     }
 
-    public void dbQuery() throws SQLException{
-        Connection dbConnection;
+    public void dbQuery(String login, String password) throws SQLException{
+
         PreparedStatement prepStatement = null;
         String selectTableSQL = "select * from public.notes_list";
 
         try {
 
-            prepStatement = connect().prepareStatement(selectTableSQL);
+            prepStatement = connect(login, password).prepareStatement(selectTableSQL);
             // выполнить SQL запрос
             prepStatement.executeQuery();
             System.out.println("Select is created!");

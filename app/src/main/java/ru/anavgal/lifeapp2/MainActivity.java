@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
             Database db = new Database(host, login, password);
 
-            // Database db = new Database("10.0.2.2", "postgres", "KapiTal14");
-
             try {
                 db.dbQuery(login, password);
             } catch (SQLException e) {

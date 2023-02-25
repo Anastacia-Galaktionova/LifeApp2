@@ -1,9 +1,6 @@
 package ru.anavgal.lifeapp2;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
     private Connection connection;
@@ -60,24 +57,23 @@ public class Database {
         return connection;
     }
 
-    public void dbQuery(String login, String password) throws SQLException{
-
+    public ResultSet dbQueryAllNotes(String login, String password) throws SQLException{
         PreparedStatement prepStatement = null;
+        ResultSet querySet=null;
         String selectTableSQL = "select * from public.notes_list";
-
         try {
-
             prepStatement = connect(login, password).prepareStatement(selectTableSQL);
             // выполнить SQL запрос
-            prepStatement.executeQuery();
+            querySet = prepStatement.executeQuery();
             System.out.println("Select is created!");
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
+        } /*finally {
             if (prepStatement != null) {
                 prepStatement.close();
             }
-
-        }
+        }*/
+        return(querySet);
     }
 }
